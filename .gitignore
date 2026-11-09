@@ -1,0 +1,9 @@
+target/
+_build/
+.dub/
+*.a
+*.lib
+*.tar.gz
+Cargo.lock
+__test__*
+ltcodes-test-library*

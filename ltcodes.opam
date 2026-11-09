@@ -1,0 +1,18 @@
+opam-version: "2.0"
+version: "0.1.0"
+synopsis: "Validate Lithuanian personal codes, company codes, VAT numbers and IBANs"
+description: "Checks for Lithuanian personal codes, company codes, VAT numbers and IBANs, with no dependencies beyond the standard library."
+maintainer: ["Justas Arbatauskis <info@kokybiskasvetaine.lt>"]
+authors: ["Justas Arbatauskis"]
+license: "MIT"
+homepage: "https://kokybiskasvetaine.lt/"
+bug-reports: "https://github.com/ello-lithuania/ltcodes/issues"
+dev-repo: "git+https://github.com/ello-lithuania/ltcodes.git"
+depends: [
+  "ocaml" {>= "4.08"}
+  "dune" {>= "3.0"}
+]
+build: [
+  ["dune" "build" "--root" "ocaml" "-p" name "-j" jobs]
+  ["dune" "test" "--root" "ocaml" "-p" name "-j" jobs] {with-test}
+]

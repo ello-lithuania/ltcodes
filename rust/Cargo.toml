@@ -1,0 +1,11 @@
+[package]
+name = "ltcodes"
+version = "0.1.0"
+edition = "2021"
+description = "Validate Lithuanian personal codes, company codes, VAT numbers and IBANs"
+license = "MIT"
+repository = "https://github.com/ello-lithuania/ltcodes"
+homepage = "https://kokybiskasvetaine.lt/"
+readme = "README.md"
+keywords = ["lithuania", "validation", "iban", "vat", "identifier"]
+categories = ["parser-implementations"]

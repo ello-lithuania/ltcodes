@@ -1,0 +1,60 @@
+name: Tests
+on:
+  push:
+  workflow_dispatch:
+jobs:
+  rust:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: cargo test --manifest-path rust/Cargo.toml
+      - run: cargo package --manifest-path rust/Cargo.toml --allow-dirty
+  r:
+    runs-on: ubuntu-latest
+    env:
+      _R_CHECK_FORCE_SUGGESTS_: "false"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-r@v2
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq tidy qpdf
+      - name: Check as CRAN
+        run: |
+          cd r
+          R CMD build ltcodes
+          R CMD check --as-cran --no-manual ltcodes_*.tar.gz || (cat ltcodes.Rcheck/00check.log; exit 1)
+          cat ltcodes.Rcheck/00check.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cran-tarball
+          path: r/ltcodes_*.tar.gz
+  d:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dlang-community/setup-dlang@v2
+      - run: dub test
+  ocaml:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ocaml/setup-ocaml@v3
+        with:
+          ocaml-compiler: "5"
+      - run: opam install -y dune
+      - run: opam exec -- dune test --root ocaml
+  dist:
+    needs: [rust, r, d, ocaml]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: cran-tarball
+          path: dist
+      - run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add -f dist
+          git diff --cached --quiet || (git commit -m "Build the CRAN source package" && git pull --rebase && git push)

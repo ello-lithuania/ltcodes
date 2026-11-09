@@ -1,0 +1,14 @@
+Package: ltcodes
+Type: Package
+Title: Validate Lithuanian Personal, Company, VAT and Bank Account Codes
+Version: 0.1.0
+Authors@R: person("Justas", "Arbatauskis", email = "info@kokybiskasvetaine.lt", role = c("aut", "cre"))
+Description: Vectorised checks for Lithuanian personal codes, company codes,
+    VAT numbers and IBANs, and helpers that read the birth date and sex stored
+    in a personal code. The company code check was tested against the open data
+    of the Register Centre <https://www.registrucentras.lt/p/1094>.
+License: MIT + file LICENSE
+URL: https://kokybiskasvetaine.lt/, https://github.com/ello-lithuania/ltcodes
+BugReports: https://github.com/ello-lithuania/ltcodes/issues
+Encoding: UTF-8
+Language: en-US
