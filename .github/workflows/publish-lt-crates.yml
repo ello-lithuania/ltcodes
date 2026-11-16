@@ -1,0 +1,25 @@
+name: Publish the Lithuanian data crates
+on: workflow_dispatch
+jobs:
+  crates:
+    runs-on: ubuntu-latest
+    env:
+      CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: ello-lithuania/lietuviski-vardadieniai
+          path: vardadieniai
+      - uses: actions/checkout@v4
+        with:
+          repository: ello-lithuania/vestuviu-metines
+          path: vestuviu-metines
+      - run: rustup update stable && rustup default stable
+      - name: vardadieniai
+        run: cargo publish --allow-dirty --manifest-path vardadieniai/rust/Cargo.toml
+      - name: vestuviu-metines
+        if: ${{ !cancelled() }}
+        run: cargo publish --allow-dirty --manifest-path vestuviu-metines/rust/Cargo.toml
+      - name: naujagimiu-vardai
+        if: ${{ !cancelled() }}
+        run: cargo publish --allow-dirty --manifest-path vardadieniai/naujagimiu-vardai/rust/Cargo.toml
