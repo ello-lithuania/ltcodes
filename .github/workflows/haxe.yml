@@ -1,0 +1,44 @@
+name: Haxe
+on:
+  push:
+    paths: ["haxe/**", "test_vectors.json", ".github/workflows/haxe.yml"]
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: Publish ltcodes to lib.haxe.org (registers user ellolt on first run)
+        type: boolean
+        default: false
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: haxe
+    steps:
+      - uses: actions/checkout@v4
+      - uses: krdlab/setup-haxe@v1
+        with:
+          haxe-version: 4.3.6
+      - run: haxe -cp src -cp test -main Test --interp
+      - run: zip -r ltcodes.zip haxelib.json src README.md LICENSE && unzip -l ltcodes.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: haxelib-zip
+          path: haxe/ltcodes.zip
+  publish:
+    if: github.event_name == 'workflow_dispatch' && inputs.publish
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: krdlab/setup-haxe@v1
+        with:
+          haxe-version: 4.3.6
+      - uses: actions/download-artifact@v4
+        with:
+          name: haxelib-zip
+      - name: Register (first run only) and submit
+        env:
+          PW: ${{ secrets.HAXELIB_PASSWORD }}
+        run: |
+          haxelib register ellolt info@kokybiskasvetaine.lt "Justas Arbatauskis" "$PW" "$PW" || echo "already registered"
+          haxelib submit ltcodes.zip "$PW" --always

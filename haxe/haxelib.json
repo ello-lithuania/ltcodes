@@ -1,0 +1,12 @@
+{
+	"name": "ltcodes",
+	"url": "https://kokybiskasvetaine.lt/",
+	"license": "MIT",
+	"tags": ["validation", "lithuania", "iban", "vat", "cross"],
+	"description": "Validate Lithuanian personal codes, company codes, VAT numbers and IBANs. No dependencies.",
+	"version": "1.0.0",
+	"classPath": "src/",
+	"releasenote": "First version.",
+	"contributors": ["ellolt"],
+	"dependencies": {}
+}
