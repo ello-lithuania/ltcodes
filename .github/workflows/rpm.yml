@@ -1,7 +1,7 @@
 name: RPM package
 on:
   push:
-    paths: ["packaging/rpm/**", ".github/workflows/rpm.yml"]
+    paths: ["packaging/rpm/**", ".copr/**", ".github/workflows/rpm.yml"]
   workflow_dispatch:
 jobs:
   rpmbuild:
@@ -19,3 +19,8 @@ jobs:
           dnf -y install ~/rpmbuild/RPMS/*/ltcodes-*.rpm
           ltcodes 33309240064 "LT12 1000 0111 0100 1000"
           rpm -qi ltcodes | grep -E "^(URL|Version)"
+      - name: COPR make_srpm method
+        run: |
+          dnf -y install make
+          make -f .copr/Makefile srpm outdir=/tmp/copr-out
+          ls -l /tmp/copr-out/*.src.rpm
