@@ -1,6 +1,6 @@
 # ltcodes
 
-Validate Lithuanian personal codes, company codes, VAT numbers and IBANs. The same small library in four languages, with no dependencies.
+Validate Lithuanian personal codes, company codes, VAT numbers and IBANs. The same small library in five languages, with no dependencies.
 
 | Language | Folder | Package |
 |---|---|---|
@@ -8,8 +8,9 @@ Validate Lithuanian personal codes, company codes, VAT numbers and IBANs. The sa
 | R | [`r/ltcodes/`](r/ltcodes) | `ltcodes` on CRAN |
 | D | [`source/`](source) | `ltcodes` on the DUB registry |
 | OCaml | [`ocaml/`](ocaml) | `ltcodes` on opam |
+| Clojure | [`clojure/`](clojure) | `net.clojars.ellolt/ltcodes` on Clojars |
 
-All four use the shared cases in [`test_vectors.json`](test_vectors.json).
+All five use the shared cases in [`test_vectors.json`](test_vectors.json).
 
 ## What is checked
 
