@@ -11,7 +11,10 @@ jobs:
       - uses: melusina-org/setup-macports@v1
       - name: Lint, build, install and run
         run: |
-          cd packaging/macports/textproc/ltcodes
+          mkdir -p /tmp/ports/textproc
+          cp -R packaging/macports/textproc/ltcodes /tmp/ports/textproc/
+          chmod -R a+rX /tmp/ports
+          cd /tmp/ports/textproc/ltcodes
           port lint --nitpick
           sudo port -vst install
           ltcodes 33309240064 "LT12 1000 0111 0100 1000"
