@@ -1,0 +1,21 @@
+name: RPM package
+on:
+  push:
+    paths: ["packaging/rpm/**", ".github/workflows/rpm.yml"]
+  workflow_dispatch:
+jobs:
+  rpmbuild:
+    runs-on: ubuntu-latest
+    container: fedora:latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: dnf -y install rpm-build rpmdevtools cargo rust
+      - name: Build and test the RPM
+        run: |
+          rpmdev-setuptree
+          cp packaging/rpm/ltcodes.spec ~/rpmbuild/SPECS/
+          spectool -g -R ~/rpmbuild/SPECS/ltcodes.spec
+          rpmbuild -ba ~/rpmbuild/SPECS/ltcodes.spec
+          dnf -y install ~/rpmbuild/RPMS/*/ltcodes-*.rpm
+          ltcodes 33309240064 "LT12 1000 0111 0100 1000"
+          rpm -qi ltcodes | grep -E "^(URL|Version)"
