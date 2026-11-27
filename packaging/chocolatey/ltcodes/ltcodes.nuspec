@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>ltcodes</id>
+    <version>__VERSION__</version>
+    <title>ltcodes (Lithuanian code validator)</title>
+    <authors>KokybiskaSvetaine.lt</authors>
+    <owners>ellolt</owners>
+    <projectUrl>https://kokybiskasvetaine.lt/</projectUrl>
+    <projectSourceUrl>https://github.com/ello-lithuania/ltcodes</projectSourceUrl>
+    <packageSourceUrl>https://github.com/ello-lithuania/ltcodes/tree/main/packaging/chocolatey/ltcodes</packageSourceUrl>
+    <docsUrl>https://github.com/ello-lithuania/ltcodes/tree/main/rust#readme</docsUrl>
+    <bugTrackerUrl>https://github.com/ello-lithuania/ltcodes/issues</bugTrackerUrl>
+    <licenseUrl>https://github.com/ello-lithuania/ltcodes/blob/main/LICENSE</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <tags>lithuania lithuanian validation iban vat personal-code company-code cli</tags>
+    <summary>Check Lithuanian personal codes, company codes, VAT numbers and IBANs from the command line.</summary>
+    <description>Command line tool that checks Lithuanian codes:
+
+- **Personal code** (asmens kodas): 11 digits with the birth date and a check digit
+- **Company code** (juridinio asmens kodas): 9 digits with a check digit
+- **VAT number** (PVM moketojo kodas): 9 or 12 digits, with or without the `LT` prefix
+- **IBAN**: 20 characters that start with `LT`, MOD-97 rule
+
+Usage:
+
+    ltcodes 33309240064 123033512 "LT12 1000 0111 0100 1000"
+
+Each code is printed with what it is valid as, or "invalid". The exit status is 0 when every code is valid, 1 when any is invalid. A valid check digit only proves that a code is well formed, not that it was issued to anyone.
+
+Made by KokybiskaSvetaine.lt, a web development studio in Lithuania. MIT licence.</description>
+    <releaseNotes>https://github.com/ello-lithuania/ltcodes/releases</releaseNotes>
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+</package>

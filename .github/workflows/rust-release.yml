@@ -1,0 +1,81 @@
+name: Rust release
+on:
+  push:
+    tags: ["rust-v*"]
+    branches: [main]
+    paths: [".github/workflows/rust-release.yml", "packaging/chocolatey/**"]
+  workflow_dispatch:
+permissions:
+  contents: write
+env:
+  # Release tag for runs that are not started by a tag push.
+  TAG: ${{ startsWith(github.ref, 'refs/tags/rust-v') && github.ref_name || 'rust-v0.2.0' }}
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            ext: .exe
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            ext: ""
+          - os: macos-latest
+            target: aarch64-apple-darwin
+            ext: ""
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TAG }}
+          path: src
+      - uses: actions/checkout@v4
+        with:
+          path: main
+      - run: rustup update stable && rustup default stable && rustup target add ${{ matrix.target }}
+        shell: bash
+      - run: cargo build --release --manifest-path src/rust/Cargo.toml --target ${{ matrix.target }}
+        shell: bash
+      - name: Archive
+        shell: bash
+        run: |
+          mkdir -p dist stage
+          cp "src/rust/target/${{ matrix.target }}/release/ltcodes${{ matrix.ext }}" src/rust/README.md src/rust/LICENSE stage/
+          if [ "${{ matrix.ext }}" = ".exe" ]; then (cd stage && 7z a -tzip "../dist/ltcodes-${{ matrix.target }}.zip" . >/dev/null); else tar -czf "dist/ltcodes-${{ matrix.target }}.tar.gz" -C stage .; fi
+          ./stage/ltcodes${{ matrix.ext }} 33309240064 "LT12 1000 0111 0100 1000"
+      - name: Chocolatey package
+        if: matrix.os == 'windows-latest'
+        shell: pwsh
+        run: |
+          $ver = "${{ env.TAG }}" -replace '^rust-v', ''
+          $pk = "chocobuild\ltcodes"; New-Item -ItemType Directory -Force "$pk\tools" | Out-Null
+          Copy-Item "src\rust\target\x86_64-pc-windows-msvc\release\ltcodes.exe" "$pk\tools\"
+          Copy-Item "src\rust\LICENSE" "$pk\tools\LICENSE.txt"
+          $sha = (Get-FileHash "$pk\tools\ltcodes.exe" -Algorithm SHA256).Hash
+          (Get-Content "main\packaging\chocolatey\ltcodes\VERIFICATION.txt" -Raw).Replace("__VERSION__", $ver).Replace("__SHA256__", $sha) | Set-Content "$pk\tools\VERIFICATION.txt" -Encoding utf8
+          (Get-Content "main\packaging\chocolatey\ltcodes\ltcodes.nuspec" -Raw).Replace("__VERSION__", $ver) | Set-Content "$pk\ltcodes.nuspec" -Encoding utf8
+          choco pack "$pk\ltcodes.nuspec" --outputdirectory dist
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+          choco install ltcodes --source "$PWD\dist" -y --no-progress
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+          ltcodes 33309240064
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist-${{ matrix.target }}
+          path: dist/*
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.TAG }}
+          name: ltcodes ${{ env.TAG }}
+          body: Command line binaries of the `ltcodes` command for Windows, Linux and macOS (Apple Silicon), and the Chocolatey package. Source and docs in this repository (rust/).
+          files: dist/*

@@ -1,0 +1,16 @@
+name: Publish to Chocolatey
+on: workflow_dispatch
+jobs:
+  push:
+    runs-on: windows-latest
+    steps:
+      - name: Download the package from the latest Rust release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release download rust-v0.2.0 --repo ${{ github.repository }} --pattern "*.nupkg"
+      - name: Push
+        shell: pwsh
+        run: |
+          choco push (Get-ChildItem *.nupkg).FullName --source https://push.chocolatey.org/ --api-key "${{ secrets.CHOCOLATEY_API_KEY }}"
+          if ($LASTEXITCODE -ne 0) { exit 1 }

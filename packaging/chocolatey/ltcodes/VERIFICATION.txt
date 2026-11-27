@@ -1,0 +1,13 @@
+VERIFICATION
+Verification is intended to assist the Chocolatey moderators and community
+in verifying that this package's contents are trustworthy.
+
+The package embeds ltcodes.exe built by GitHub Actions from the public source code:
+  https://github.com/ello-lithuania/ltcodes (directory rust, tag rust-v__VERSION__)
+The same file is attached to the GitHub release:
+  https://github.com/ello-lithuania/ltcodes/releases/tag/rust-v__VERSION__  (ltcodes-x86_64-pc-windows-msvc.zip)
+
+To verify:
+  1. Download the zip from the release page and extract ltcodes.exe.
+  2. Compare checksums: Get-FileHash ltcodes.exe -Algorithm SHA256
+     SHA256 of the embedded file: __SHA256__
