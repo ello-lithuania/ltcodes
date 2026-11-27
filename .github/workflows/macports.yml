@@ -1,0 +1,18 @@
+name: MacPorts port
+on:
+  push:
+    paths: ["packaging/macports/**", ".github/workflows/macports.yml"]
+  workflow_dispatch:
+jobs:
+  port:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: melusina-org/setup-macports@v1
+      - name: Lint, build, install and run
+        run: |
+          cd packaging/macports/textproc/ltcodes
+          port lint --nitpick
+          sudo port -vst install
+          ltcodes 33309240064 "LT12 1000 0111 0100 1000"
+          port contents ltcodes
