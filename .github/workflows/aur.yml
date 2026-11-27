@@ -1,0 +1,19 @@
+name: AUR package
+on:
+  push:
+    paths: ["packaging/aur/**", ".github/workflows/aur.yml"]
+  workflow_dispatch:
+jobs:
+  makepkg:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pacman -Syu --noconfirm --needed base-devel rust
+      - name: Build, test and check .SRCINFO
+        run: |
+          useradd -m builder
+          cp -r packaging/aur /home/builder/pkg
+          chown -R builder /home/builder/pkg
+          su builder -c 'cd ~/pkg && makepkg --noconfirm && makepkg --printsrcinfo > /tmp/srcinfo && diff -u .SRCINFO /tmp/srcinfo'
+          /home/builder/pkg/pkg/ltcodes/usr/bin/ltcodes 33309240064 "LT12 1000 0111 0100 1000"

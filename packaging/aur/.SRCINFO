@@ -1,0 +1,15 @@
+pkgbase = ltcodes
+	pkgdesc = Validate Lithuanian personal codes, company codes, VAT numbers and IBANs from the command line
+	pkgver = 0.2.0
+	pkgrel = 1
+	url = https://kokybiskasvetaine.lt/
+	arch = x86_64
+	arch = aarch64
+	license = MIT
+	makedepends = cargo
+	depends = gcc-libs
+	depends = glibc
+	source = ltcodes-0.2.0.tar.gz::https://github.com/ello-lithuania/ltcodes/archive/refs/tags/rust-v0.2.0.tar.gz
+	sha256sums = c7da58adbd6a878c736b1bc2e72427177d26dff89495f86ea06a24416ffb0406
+
+pkgname = ltcodes
