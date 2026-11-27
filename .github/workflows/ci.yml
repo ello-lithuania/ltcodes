@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: cargo test --manifest-path rust/Cargo.toml
+      - run: cargo test --locked --manifest-path rust/Cargo.toml
       - run: cargo package --manifest-path rust/Cargo.toml --allow-dirty
   r:
     runs-on: ubuntu-latest
