@@ -1,6 +1,6 @@
 [package]
 name = "ltcodes"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "Validate Lithuanian personal codes, company codes, VAT numbers and IBANs"
 license = "MIT"
@@ -8,4 +8,9 @@ repository = "https://github.com/ello-lithuania/ltcodes"
 homepage = "https://kokybiskasvetaine.lt/"
 readme = "README.md"
 keywords = ["lithuania", "validation", "iban", "vat", "identifier"]
-categories = ["parser-implementations"]
+categories = ["parser-implementations", "command-line-utilities"]
+
+[[bin]]
+name = "ltcodes"
+path = "src/main.rs"
+doc = false

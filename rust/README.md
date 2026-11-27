@@ -10,6 +10,21 @@ assert!(ltcodes::is_vat_number("LT119511515"));
 assert!(ltcodes::is_iban("LT12 1000 0111 0100 1000"));
 ```
 
+## Command line
+
+The crate also installs a small `ltcodes` command:
+
+```
+$ cargo install ltcodes
+$ ltcodes 33309240064 123033512 "LT12 1000 0111 0100 1000" 33309240164
+33309240064: valid personal code, born 1933-09-24
+123033512: valid company code, VAT number
+LT12 1000 0111 0100 1000: valid IBAN
+33309240164: invalid
+```
+
+The exit status is 0 when every code is valid, 1 when any is invalid.
+
 ## What is checked
 
 - **Personal code** (*asmens kodas*): 11 digits, the first digit gives the century and sex, the next six the birth date, and the last one is a check digit. Codes that start with 9 carry no date, so only the check digit is tested.
