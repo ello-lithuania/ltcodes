@@ -1,0 +1,20 @@
+name: Alpine package
+on:
+  push:
+    paths: ["packaging/alpine/**", ".github/workflows/alpine.yml"]
+  workflow_dispatch:
+jobs:
+  abuild:
+    runs-on: ubuntu-latest
+    container: alpine:edge
+    steps:
+      - uses: actions/checkout@v4
+      - run: apk add --no-cache alpine-sdk atools cargo cargo-auditable sudo
+      - name: Lint, build, test and install
+        run: |
+          adduser -D builder && addgroup builder abuild
+          echo "builder ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/builder
+          cp -r packaging/alpine/ltcodes /home/builder/ltcodes && chown -R builder /home/builder/ltcodes
+          su builder -c 'cd ~/ltcodes && apkbuild-lint APKBUILD && abuild-keygen -an && abuild checksum && git diff --no-index --exit-code ~/ltcodes/APKBUILD '"$PWD"'/packaging/alpine/ltcodes/APKBUILD && abuild -r'
+          apk add --allow-untrusted /home/builder/packages/*/x86_64/ltcodes-0.2.1-r0.apk
+          ltcodes 33309240064 "LT12 1000 0111 0100 1000"

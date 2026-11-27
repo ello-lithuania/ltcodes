@@ -1,0 +1,37 @@
+# Contributor: Justas Arbatauskis <info@kokybiskasvetaine.lt>
+# Maintainer: Justas Arbatauskis <info@kokybiskasvetaine.lt>
+pkgname=ltcodes
+pkgver=0.2.1
+pkgrel=0
+pkgdesc="Validate Lithuanian personal codes, company codes, VAT numbers and IBANs"
+url="https://kokybiskasvetaine.lt/"
+arch="all"
+license="MIT"
+makedepends="cargo cargo-auditable"
+subpackages="$pkgname-doc"
+source="$pkgname-$pkgver.tar.gz::https://github.com/ello-lithuania/ltcodes/archive/refs/tags/rust-v$pkgver.tar.gz"
+builddir="$srcdir/ltcodes-rust-v$pkgver/rust"
+
+prepare() {
+	default_prepare
+
+	cargo fetch --target="$CTARGET" --locked
+}
+
+build() {
+	cargo auditable build --frozen --release
+}
+
+check() {
+	cargo test --frozen
+}
+
+package() {
+	install -Dm755 target/release/ltcodes -t "$pkgdir"/usr/bin/
+	install -Dm644 README.md -t "$pkgdir"/usr/share/doc/$pkgname/
+	install -Dm644 LICENSE -t "$pkgdir"/usr/share/licenses/$pkgname/
+}
+
+sha512sums="
+cce661532c653d29bc3b95057e19a7dbc2b9aa12423d83cd69a787e00173c43fdeb51bd588839ae02c470050f050a3b354de499cb59c3650dead1b4e70fb1280  ltcodes-0.2.1.tar.gz
+"
