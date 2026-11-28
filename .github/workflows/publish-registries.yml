@@ -65,7 +65,7 @@ jobs:
           fi
           sudo gem install stove --no-document
           printf '%s\n' "$SUPERMARKET_KEY" > "$RUNNER_TEMP/supermarket.pem"
-          stove --path chef/ltcodes --username "$SUPERMARKET_USER" --key "$RUNNER_TEMP/supermarket.pem" --no-git --extended-metadata
+          RUBYOPT=-rstringio stove --path chef/ltcodes --username "$SUPERMARKET_USER" --key "$RUNNER_TEMP/supermarket.pem" --no-git --extended-metadata
   prolog:
     if: github.ref_type == 'tag'
     runs-on: ubuntu-latest
