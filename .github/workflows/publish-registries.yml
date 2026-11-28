@@ -69,6 +69,7 @@ jobs:
             echo "::error::SUPERMARKET_KEY is not a private key (first line starts with: $(head -1 "$RUNNER_TEMP/supermarket.pem" | cut -c1-16)). Paste the private key shown after Reset Key in Chef Manage."
             exit 1
           fi
+          echo "Public key SHA-256 (compare with Chef Manage): $(openssl rsa -in "$RUNNER_TEMP/supermarket.pem" -pubout -outform DER 2>/dev/null | sha256sum | cut -c1-16)"
           RUBYOPT=-rstringio stove --path chef/ltcodes --username "$SUPERMARKET_USER" --key "$RUNNER_TEMP/supermarket.pem" --no-git --extended-metadata
   prolog:
     if: github.ref_type == 'tag'
