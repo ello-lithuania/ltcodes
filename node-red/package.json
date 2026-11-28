@@ -27,7 +27,7 @@
     "iban"
   ],
   "dependencies": {
-    "ltcodes": "^0.1.0"
+    "@ellolt/ltcodes": "^0.1.0"
   },
   "devDependencies": {
     "mocha": "^10.8.2",

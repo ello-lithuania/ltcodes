@@ -3,11 +3,11 @@
 Validate Lithuanian personal codes, company codes, VAT numbers and IBANs in JavaScript. No dependencies, works in Node.js and with bundlers (CommonJS, with TypeScript types).
 
 ```
-npm install ltcodes
+npm install @ellolt/ltcodes
 ```
 
 ```js
-const lt = require('ltcodes');
+const lt = require('@ellolt/ltcodes');
 
 lt.isPersonalCode('33309240064');     // true
 lt.birthDate('33309240064');          // { year: 1933, month: 9, day: 24 }
@@ -22,7 +22,7 @@ lt.kinds('123033512');                // ['company', 'vat']
 ## Command line
 
 ```
-$ npx ltcodes 33309240064 123033512 "LT12 1000 0111 0100 1000" 33309240164
+$ npx @ellolt/ltcodes 33309240064 123033512 "LT12 1000 0111 0100 1000" 33309240164
 33309240064: valid personal code, born 1933-09-24
 123033512: valid company code, VAT number
 LT12 1000 0111 0100 1000: valid IBAN

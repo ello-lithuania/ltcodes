@@ -24,7 +24,7 @@ jobs:
       - name: Test against the ltcodes package in this repository
         working-directory: node-red
         run: |
-          npm pkg set dependencies.ltcodes=file:../js
+          npm pkg set "dependencies.@ellolt/ltcodes=file:../js"
           npm install --no-audit --no-fund
           npm test
   prolog:

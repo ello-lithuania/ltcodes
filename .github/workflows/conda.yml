@@ -7,6 +7,9 @@ on:
       - "packaging/check_cli.py"
       - ".github/workflows/conda.yml"
   workflow_dispatch:
+permissions:
+  contents: read
+  id-token: write # trusted publishing (OIDC) to prefix.dev
 jobs:
   build:
     strategy:
@@ -21,11 +24,11 @@ jobs:
             target: win-64
     runs-on: ${{ matrix.os }}
     env:
-      # Uploads run only when these secrets are set.
+      # Uploads run on manual runs of main only; anaconda.org also needs its token.
       ANACONDA_API_KEY: ${{ secrets.ANACONDA_API_KEY }}
-      PREFIX_API_KEY: ${{ secrets.PREFIX_API_KEY }}
       ANACONDA_OWNER: ${{ secrets.ANACONDA_OWNER || 'ellolt' }}
-      PREFIX_CHANNEL: ${{ secrets.PREFIX_CHANNEL || 'ltcodes' }}
+      PREFIX_CHANNEL: ${{ secrets.PREFIX_CHANNEL || 'justelis123as/ltcodes' }}
+      UPLOAD: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' }}
     steps:
       - uses: actions/checkout@v4
       - run: cp packaging/check_cli.py packaging/conda/
@@ -36,14 +39,14 @@ jobs:
           build-args: --target-platform ${{ matrix.target }} -c conda-forge -m packaging/conda/variants.yaml
           artifact-name: conda-${{ matrix.target }}
       - name: Upload to anaconda.org
-        if: env.ANACONDA_API_KEY != '' && github.ref == 'refs/heads/main'
+        if: env.UPLOAD == 'true' && env.ANACONDA_API_KEY != ''
         shell: bash
         run: |
           for pkg in $(find output -type f -name '*.conda'); do
             rattler-build upload anaconda --owner "$ANACONDA_OWNER" --force "$pkg"
           done
-      - name: Upload to prefix.dev
-        if: env.PREFIX_API_KEY != '' && github.ref == 'refs/heads/main'
+      - name: Upload to prefix.dev (trusted publishing, no API key)
+        if: env.UPLOAD == 'true'
         shell: bash
         run: |
           for pkg in $(find output -type f -name '*.conda'); do

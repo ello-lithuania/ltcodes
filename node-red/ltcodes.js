@@ -1,6 +1,6 @@
 'use strict';
 
-const lt = require('ltcodes');
+const lt = require('@ellolt/ltcodes');
 
 const KINDS = ['personal', 'company', 'vat', 'iban'];
 

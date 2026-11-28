@@ -41,6 +41,6 @@ The node adds `msg.ltcodes`:
 - **VAT number**: 9 or 12 digits, with or without the `LT` prefix.
 - **IBAN**: 20 characters that start with `LT`, checked with the MOD-97 rule.
 
-The check digit only proves that a code is well formed, not that it was issued to anyone. The checks come from the [`ltcodes`](https://www.npmjs.com/package/ltcodes) package and pass the shared test cases of the [ltcodes repository](https://github.com/ello-lithuania/ltcodes).
+The check digit only proves that a code is well formed, not that it was issued to anyone. The checks come from the [`@ellolt/ltcodes`](https://www.npmjs.com/package/@ellolt/ltcodes) package and pass the shared test cases of the [ltcodes repository](https://github.com/ello-lithuania/ltcodes).
 
 Made by [KokybiskaSvetaine.lt](https://kokybiskasvetaine.lt/). Licence: MIT.

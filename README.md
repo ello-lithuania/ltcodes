@@ -5,7 +5,7 @@ Validate Lithuanian personal codes, company codes, VAT numbers and IBANs. The sa
 | Language or tool | Folder | Package |
 |---|---|---|
 | Rust (library and `ltcodes` command) | [`rust/`](rust) | `ltcodes` on crates.io, binaries in [Releases](https://github.com/ello-lithuania/ltcodes/releases) |
-| JavaScript / TypeScript | [`js/`](js) | `ltcodes` on npm |
+| JavaScript / TypeScript | [`js/`](js) | `@ellolt/ltcodes` on npm |
 | Node-RED | [`node-red/`](node-red) | `node-red-contrib-ltcodes` on npm |
 | C (any project, ESP-IDF) | [`c/`](c) | `ello-lithuania/ltcodes` in the ESP Component Registry |
 | R | [`r/ltcodes/`](r/ltcodes) | `ltcodes` on CRAN |
