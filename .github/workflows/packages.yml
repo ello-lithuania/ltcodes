@@ -42,7 +42,7 @@ jobs:
       - uses: Raku/setup-raku@v1
       - working-directory: raku
         run: |
-          zef install --deps-only --/test .
+          zef install --deps-only .
           zef test --verbose .
   c:
     runs-on: ubuntu-latest
