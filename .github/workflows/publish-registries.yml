@@ -63,14 +63,17 @@ jobs:
           if curl -sf "https://supermarket.chef.io/api/v1/cookbooks/ltcodes/versions/$version" >/dev/null; then
             echo "ltcodes $version is already on Supermarket"; exit 0
           fi
-          sudo gem install stove --no-document
+          curl -fsSL https://omnitruck.cinc.sh/install.sh | sudo bash -s -- -P cinc-workstation
           printf '%s\n' "$SUPERMARKET_KEY" | tr -d '\r' > "$RUNNER_TEMP/supermarket.pem"
           if ! grep -q 'PRIVATE KEY-----' "$RUNNER_TEMP/supermarket.pem"; then
             echo "::error::SUPERMARKET_KEY is not a private key (first line starts with: $(head -1 "$RUNNER_TEMP/supermarket.pem" | cut -c1-16)). Paste the private key shown after Reset Key in Chef Manage."
             exit 1
           fi
           echo "Public key SHA-256 (compare with Chef Manage): $(openssl rsa -in "$RUNNER_TEMP/supermarket.pem" -pubout -outform DER 2>/dev/null | sha256sum | cut -c1-16)"
-          RUBYOPT=-rstringio stove --path chef/ltcodes --username "$SUPERMARKET_USER" --key "$RUNNER_TEMP/supermarket.pem" --no-git --extended-metadata
+          mkdir -p "$RUNNER_TEMP/cookbooks" && cp -r chef/ltcodes "$RUNNER_TEMP/cookbooks/"
+          knife supermarket share ltcodes "Utilities" --cookbook-path "$RUNNER_TEMP/cookbooks" \
+            --user "$SUPERMARKET_USER" --key "$RUNNER_TEMP/supermarket.pem" \
+            --supermarket-site https://supermarket.chef.io
   prolog:
     if: github.ref_type == 'tag'
     runs-on: ubuntu-latest
