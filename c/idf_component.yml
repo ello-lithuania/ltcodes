@@ -1,0 +1,18 @@
+version: "0.1.0"
+description: Validate Lithuanian personal codes, company codes, VAT numbers and IBANs. Plain C99, no allocations, no dependencies.
+url: https://kokybiskasvetaine.lt/
+repository: https://github.com/ello-lithuania/ltcodes.git
+repository_info:
+  path: c
+issues: https://github.com/ello-lithuania/ltcodes/issues
+license: MIT
+tags:
+  - lithuania
+  - validation
+  - iban
+  - vat
+dependencies:
+  idf: ">=4.1"
+files:
+  exclude:
+    - "test/**/*"

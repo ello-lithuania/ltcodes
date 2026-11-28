@@ -1,0 +1,25 @@
+use Test;
+use JSON::Fast;
+use LTCodes;
+
+# t/test_vectors.json is a copy of the shared test cases in the repository root.
+my %v = from-json($?FILE.IO.parent.add('test_vectors.json').slurp);
+
+my %check =
+    personal => &is-personal-code,
+    company  => &is-company-code,
+    vat      => &is-vat-number,
+    iban     => &is-iban;
+
+for %check.sort(*.key) -> (:key($kind), :value(&f)) {
+    ok  f($_), "$kind valid: '$_'"   for |%v{$kind}<valid>;
+    nok f($_), "$kind invalid: '$_'" for |%v{$kind}<invalid>;
+}
+
+is birth-date('33309240064'), Date.new(1933, 9, 24), 'birth date';
+nok birth-date('90000000009').defined, 'codes that start with 9 carry no date';
+nok birth-date('33313240064').defined, 'month 13';
+is-deeply code-kinds('123033512'), ('company', 'vat'), 'a company code is also a VAT number';
+is-deeply code-kinds('x'), (), 'nothing';
+
+done-testing;

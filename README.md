@@ -1,17 +1,24 @@
 # ltcodes
 
-Validate Lithuanian personal codes, company codes, VAT numbers and IBANs. The same small library in six languages, with no dependencies.
+Validate Lithuanian personal codes, company codes, VAT numbers and IBANs. The same small library in many languages, with no dependencies.
 
-| Language | Folder | Package |
+| Language or tool | Folder | Package |
 |---|---|---|
-| Rust | [`rust/`](rust) | `ltcodes` on crates.io |
+| Rust (library and `ltcodes` command) | [`rust/`](rust) | `ltcodes` on crates.io, binaries in [Releases](https://github.com/ello-lithuania/ltcodes/releases) |
+| JavaScript / TypeScript | [`js/`](js) | `ltcodes` on npm |
+| Node-RED | [`node-red/`](node-red) | `node-red-contrib-ltcodes` on npm |
+| C (any project, ESP-IDF) | [`c/`](c) | `ello-lithuania/ltcodes` in the ESP Component Registry |
 | R | [`r/ltcodes/`](r/ltcodes) | `ltcodes` on CRAN |
 | D | [`source/`](source) | `ltcodes` on the DUB registry |
 | OCaml | [`ocaml/`](ocaml) | `ltcodes` on opam |
 | Clojure | [`clojure/`](clojure) | `net.clojars.ellolt/ltcodes` on Clojars |
 | Haxe | [`haxe/`](haxe) | `ltcodes` on lib.haxe.org |
+| SWI-Prolog | [`prolog/`](prolog), [`pack.pl`](pack.pl) | `ltcodes` pack |
+| Raku | [`raku/`](raku) | `LTCodes` on zef |
 
-All six use the shared cases in [`test_vectors.json`](test_vectors.json).
+The `ltcodes` command is also packaged for conda ([`packaging/conda/`](packaging/conda)), Chef ([`chef/ltcodes/`](chef/ltcodes)), Chocolatey, RPM / COPR, Alpine, MacPorts and the AUR ([`packaging/`](packaging)).
+
+All versions use the shared cases in [`test_vectors.json`](test_vectors.json).
 
 ## What is checked
 

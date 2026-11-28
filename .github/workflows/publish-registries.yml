@@ -1,0 +1,75 @@
+name: Publish to package registries
+# Each job publishes the current version when its token is set and the
+# version is not in the registry yet, so re-runs are safe.
+on:
+  push:
+    branches: [main]
+    tags: ["V*"]
+  workflow_dispatch:
+permissions:
+  contents: read
+  id-token: write
+jobs:
+  npm:
+    if: github.ref_type == 'branch'
+    runs-on: ubuntu-latest
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+      - name: Publish ltcodes and node-red-contrib-ltcodes
+        if: env.NODE_AUTH_TOKEN != ''
+        run: |
+          npm install -g npm@latest
+          for dir in js node-red; do
+            name=$(node -p "require('./$dir/package.json').name")
+            version=$(node -p "require('./$dir/package.json').version")
+            if npm view "$name@$version" version >/dev/null 2>&1; then
+              echo "$name $version is already published"
+            else
+              (cd "$dir" && npm publish --provenance --access public)
+            fi
+          done
+  esp-idf:
+    if: github.ref_type == 'branch'
+    runs-on: ubuntu-latest
+    env:
+      IDF_COMPONENT_API_TOKEN: ${{ secrets.IDF_COMPONENT_API_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Upload the C library to the ESP Component Registry
+        if: env.IDF_COMPONENT_API_TOKEN != ''
+        run: |
+          pip install idf-component-manager
+          compote component upload --namespace ello-lithuania --name ltcodes --project-dir c --allow-existing
+  chef:
+    if: github.ref_type == 'branch'
+    runs-on: ubuntu-latest
+    env:
+      SUPERMARKET_USER: ${{ secrets.SUPERMARKET_USER }}
+      SUPERMARKET_KEY: ${{ secrets.SUPERMARKET_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Share the cookbook on Chef Supermarket
+        if: env.SUPERMARKET_KEY != ''
+        run: |
+          version=$(sed -n "s/^version '\(.*\)'/\1/p" chef/ltcodes/metadata.rb)
+          if curl -sf "https://supermarket.chef.io/api/v1/cookbooks/ltcodes/versions/$version" >/dev/null; then
+            echo "ltcodes $version is already on Supermarket"; exit 0
+          fi
+          sudo gem install stove --no-document
+          printf '%s\n' "$SUPERMARKET_KEY" > "$RUNNER_TEMP/supermarket.pem"
+          stove --path chef/ltcodes --username "$SUPERMARKET_USER" --key "$RUNNER_TEMP/supermarket.pem" --no-git --extended-metadata
+  prolog:
+    if: github.ref_type == 'tag'
+    runs-on: ubuntu-latest
+    container: swipl:latest
+    steps:
+      - name: Register the release with the SWI-Prolog pack server
+        run: >
+          swipl -g "pack_publish('https://github.com/${{ github.repository }}/archive/${{ github.ref_name }}.zip', [interactive(false)])"
+          -t halt

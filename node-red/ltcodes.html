@@ -1,0 +1,80 @@
+<script type="text/javascript">
+  RED.nodes.registerType('ltcodes', {
+    category: 'function',
+    color: '#E2D96E',
+    defaults: {
+      name: { value: '' },
+      property: { value: 'payload', required: true },
+      kind: { value: 'any' },
+    },
+    inputs: 1,
+    outputs: 2,
+    outputLabels: ['valid', 'invalid'],
+    icon: 'font-awesome/fa-id-card-o',
+    paletteLabel: 'LT code check',
+    label: function () {
+      return this.name || 'LT code check';
+    },
+    oneditprepare: function () {
+      $('#node-input-property').typedInput({ default: 'msg', types: ['msg'] });
+    },
+  });
+</script>
+
+<script type="text/html" data-template-name="ltcodes">
+  <div class="form-row">
+    <label for="node-input-property"><i class="fa fa-ellipsis-h"></i> Code in</label>
+    <input type="text" id="node-input-property" style="width: 70%">
+  </div>
+  <div class="form-row">
+    <label for="node-input-kind"><i class="fa fa-check"></i> Check as</label>
+    <select id="node-input-kind" style="width: 70%">
+      <option value="any">any Lithuanian code</option>
+      <option value="personal">personal code (asmens kodas)</option>
+      <option value="company">company code (įmonės kodas)</option>
+      <option value="vat">VAT number (PVM mokėtojo kodas)</option>
+      <option value="iban">Lithuanian IBAN</option>
+    </select>
+  </div>
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name" style="width: 70%">
+  </div>
+</script>
+
+<script type="text/html" data-help-name="ltcodes">
+  <p>Checks a Lithuanian personal code, company code, VAT number or IBAN and routes the message by the result.</p>
+
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+    <dt>payload <span class="property-type">string | number</span></dt>
+    <dd>the code to check. Another message property can be set in the node.</dd>
+  </dl>
+
+  <h3>Outputs</h3>
+  <ol class="node-ports">
+    <li>Valid
+      <dl class="message-properties">
+        <dt>ltcodes <span class="property-type">object</span></dt>
+        <dd>the result, see below.</dd>
+      </dl>
+    </li>
+    <li>Invalid
+      <dl class="message-properties">
+        <dt>ltcodes <span class="property-type">object</span></dt>
+        <dd>the result, see below.</dd>
+      </dl>
+    </li>
+  </ol>
+
+  <h3>Details</h3>
+  <p><code>msg.ltcodes</code> holds:</p>
+  <ul>
+    <li><code>code</code> – the checked value as a trimmed string,</li>
+    <li><code>valid</code> – <code>true</code> or <code>false</code>,</li>
+    <li><code>kinds</code> – everything the code is valid as: <code>personal</code>, <code>company</code>, <code>vat</code>, <code>iban</code>,</li>
+    <li><code>birthDate</code> – <code>{year, month, day}</code> for a personal code that carries a date, otherwise <code>null</code>.</li>
+  </ul>
+  <p>With <i>any Lithuanian code</i> the message goes to the first output when the code is valid as at least one kind.</p>
+  <p>A valid check digit only proves that a code is well formed, not that it was issued to anyone.</p>
+</script>

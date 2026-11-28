@@ -8,3 +8,8 @@ Cargo.lock
 __test__*
 ltcodes-test-library*
 !rust/Cargo.lock
+node_modules/
+package-lock.json
+.compote/
+packaging/conda/check_cli.py
+output/

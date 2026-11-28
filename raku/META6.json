@@ -1,0 +1,31 @@
+{
+  "meta-version": 1,
+  "raku": "6.d",
+  "name": "LTCodes",
+  "description": "Validate Lithuanian personal codes, company codes, VAT numbers and IBANs",
+  "version": "0.1.0",
+  "auth": "zef:ellolt",
+  "authors": [
+    "KokybiskaSvetaine.lt"
+  ],
+  "license": "MIT",
+  "tags": [
+    "lithuania",
+    "validation",
+    "iban",
+    "vat"
+  ],
+  "provides": {
+    "LTCodes": "lib/LTCodes.rakumod"
+  },
+  "depends": [],
+  "test-depends": [
+    "JSON::Fast"
+  ],
+  "resources": [],
+  "source-url": "https://github.com/ello-lithuania/ltcodes.git",
+  "support": {
+    "source": "https://github.com/ello-lithuania/ltcodes",
+    "bugtracker": "https://github.com/ello-lithuania/ltcodes/issues"
+  }
+}

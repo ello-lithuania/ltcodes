@@ -1,0 +1,62 @@
+[
+  {
+    "id": "a1c0de5eed000001",
+    "type": "inject",
+    "name": "valid company code",
+    "props": [{ "p": "payload" }],
+    "repeat": "",
+    "once": false,
+    "topic": "",
+    "payload": "123033512",
+    "payloadType": "str",
+    "x": 170,
+    "y": 80,
+    "wires": [["a1c0de5eed000003"]]
+  },
+  {
+    "id": "a1c0de5eed000002",
+    "type": "inject",
+    "name": "wrong check digit",
+    "props": [{ "p": "payload" }],
+    "repeat": "",
+    "once": false,
+    "topic": "",
+    "payload": "110003979",
+    "payloadType": "str",
+    "x": 170,
+    "y": 140,
+    "wires": [["a1c0de5eed000003"]]
+  },
+  {
+    "id": "a1c0de5eed000003",
+    "type": "ltcodes",
+    "name": "",
+    "property": "payload",
+    "kind": "company",
+    "x": 390,
+    "y": 110,
+    "wires": [["a1c0de5eed000004"], ["a1c0de5eed000005"]]
+  },
+  {
+    "id": "a1c0de5eed000004",
+    "type": "debug",
+    "name": "valid",
+    "active": true,
+    "complete": "ltcodes",
+    "targetType": "msg",
+    "x": 590,
+    "y": 80,
+    "wires": []
+  },
+  {
+    "id": "a1c0de5eed000005",
+    "type": "debug",
+    "name": "invalid",
+    "active": true,
+    "complete": "ltcodes",
+    "targetType": "msg",
+    "x": 590,
+    "y": 140,
+    "wires": []
+  }
+]

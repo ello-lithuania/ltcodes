@@ -1,0 +1,67 @@
+name: Package tests
+on:
+  push:
+  workflow_dispatch:
+jobs:
+  js:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm test
+        working-directory: js
+      - run: npm pack --dry-run
+        working-directory: js
+  node-red:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Test against the ltcodes package in this repository
+        working-directory: node-red
+        run: |
+          npm pkg set dependencies.ltcodes=file:../js
+          npm install --no-audit --no-fund
+          npm test
+  prolog:
+    runs-on: ubuntu-latest
+    container: swipl:latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: swipl -g run_tests -t halt test/test_ltcodes.pl
+  raku:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: The test copy of the vectors matches the shared file
+        run: cmp raku/t/test_vectors.json test_vectors.json
+      - uses: Raku/setup-raku@v1
+      - working-directory: raku
+        run: |
+          zef install --deps-only --/test .
+          zef test --verbose .
+  c:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - working-directory: c
+        run: |
+          cmake -S . -B build -DCMAKE_C_FLAGS="-Wall -Wextra -Werror -pedantic"
+          cmake --build build
+          python3 test/cases.py | ./build/test_ltcodes
+  chef:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Cinc Client, the community build of Chef Infra Client
+        run: curl -fsSL https://omnitruck.cinc.sh/install.sh | sudo bash -s -- -v 18
+      - name: Converge twice
+        run: |
+          for i in 1 2; do
+            sudo cinc-client --local-mode --config-option cookbook_path="$GITHUB_WORKSPACE/chef" --override-runlist 'recipe[ltcodes]'
+          done
+      - run: ltcodes --version && python3 packaging/check_cli.py test_vectors.json

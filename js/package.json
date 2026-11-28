@@ -1,0 +1,42 @@
+{
+  "name": "ltcodes",
+  "version": "0.1.0",
+  "description": "Validate Lithuanian personal codes, company codes, VAT numbers and IBANs",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "bin": {
+    "ltcodes": "cli.js"
+  },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "cli.js"
+  ],
+  "scripts": {
+    "test": "node --test"
+  },
+  "keywords": [
+    "lithuania",
+    "lithuanian",
+    "validation",
+    "personal-code",
+    "asmens-kodas",
+    "company-code",
+    "vat",
+    "iban"
+  ],
+  "homepage": "https://kokybiskasvetaine.lt/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ello-lithuania/ltcodes.git",
+    "directory": "js"
+  },
+  "bugs": {
+    "url": "https://github.com/ello-lithuania/ltcodes/issues"
+  },
+  "author": "KokybiskaSvetaine.lt <info@kokybiskasvetaine.lt> (https://kokybiskasvetaine.lt/)",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14"
+  }
+}

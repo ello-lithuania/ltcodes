@@ -1,0 +1,51 @@
+context:
+  version: "0.2.1"
+
+package:
+  name: ltcodes
+  version: ${{ version }}
+
+source:
+  url: https://github.com/ello-lithuania/ltcodes/archive/refs/tags/rust-v${{ version }}.tar.gz
+  sha256: 2fadb4ef2e97333cb95cf8a6e3b082276e9f643a3dec7a2efaf9d01e64711ec5
+
+build:
+  number: 0
+  script:
+    - if: win
+      then: cargo install --locked --no-track --bins --root "%LIBRARY_PREFIX%" --path rust
+      else: cargo install --locked --no-track --bins --root "$PREFIX" --path rust
+
+requirements:
+  build:
+    - ${{ compiler('rust') }}
+    - if: unix
+      then:
+        - ${{ compiler('c') }}
+        - ${{ stdlib('c') }}
+
+tests:
+  - script:
+      - ltcodes --version
+      - python check_cli.py test_vectors.json
+    files:
+      recipe:
+        - check_cli.py
+      source:
+        - test_vectors.json
+    requirements:
+      run:
+        - python
+
+about:
+  homepage: https://kokybiskasvetaine.lt/
+  repository: https://github.com/ello-lithuania/ltcodes
+  documentation: https://github.com/ello-lithuania/ltcodes/tree/main/rust
+  license: MIT
+  license_file: LICENSE
+  summary: Check Lithuanian personal codes, company codes, VAT numbers and IBANs from the command line
+  description: |
+    ltcodes is a small command that checks Lithuanian personal codes (asmens kodas),
+    company codes (juridinio asmens kodas), VAT numbers (PVM mokėtojo kodas) and IBANs.
+    Each code is printed with what it is valid as, or "invalid"; the exit status is 0
+    when every code is valid. Made by KokybiskaSvetaine.lt.

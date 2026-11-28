@@ -1,0 +1,12 @@
+if(ESP_PLATFORM)
+    # ESP-IDF component
+    idf_component_register(SRCS "ltcodes.c" INCLUDE_DIRS "include")
+else()
+    cmake_minimum_required(VERSION 3.10)
+    project(ltcodes C)
+    set(CMAKE_C_STANDARD 99)
+    add_library(ltcodes ltcodes.c)
+    target_include_directories(ltcodes PUBLIC include)
+    add_executable(test_ltcodes test/test_ltcodes.c)
+    target_link_libraries(test_ltcodes ltcodes)
+endif()
