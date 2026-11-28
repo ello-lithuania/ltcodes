@@ -64,7 +64,11 @@ jobs:
             echo "ltcodes $version is already on Supermarket"; exit 0
           fi
           sudo gem install stove --no-document
-          printf '%s\n' "$SUPERMARKET_KEY" > "$RUNNER_TEMP/supermarket.pem"
+          printf '%s\n' "$SUPERMARKET_KEY" | tr -d '\r' > "$RUNNER_TEMP/supermarket.pem"
+          if ! grep -q 'PRIVATE KEY-----' "$RUNNER_TEMP/supermarket.pem"; then
+            echo "::error::SUPERMARKET_KEY is not a private key (first line starts with: $(head -1 "$RUNNER_TEMP/supermarket.pem" | cut -c1-16)). Paste the private key shown after Reset Key in Chef Manage."
+            exit 1
+          fi
           RUBYOPT=-rstringio stove --path chef/ltcodes --username "$SUPERMARKET_USER" --key "$RUNNER_TEMP/supermarket.pem" --no-git --extended-metadata
   prolog:
     if: github.ref_type == 'tag'
