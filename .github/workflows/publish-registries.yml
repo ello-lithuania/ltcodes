@@ -52,7 +52,7 @@ jobs:
     if: github.ref_type == 'branch'
     runs-on: ubuntu-latest
     env:
-      SUPERMARKET_USER: ${{ secrets.SUPERMARKET_USER }}
+      SUPERMARKET_USER: ${{ secrets.SUPERMARKET_USER || 'ellolt' }}
       SUPERMARKET_KEY: ${{ secrets.SUPERMARKET_KEY }}
     steps:
       - uses: actions/checkout@v4
